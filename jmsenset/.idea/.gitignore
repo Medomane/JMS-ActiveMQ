@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/../../../../../../../../../../:\Users\Wizardly\S5\M2 - Traitement parallèle en Big Data\Architectures Orientées Stream Processing\TPs\TP1\jmsenset\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
