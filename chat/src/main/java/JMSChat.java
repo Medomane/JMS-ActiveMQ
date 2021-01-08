@@ -14,7 +14,9 @@ import javafx.stage.Stage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 
 public class JMSChat extends Application {
     MessageProducer producer;
@@ -147,6 +149,16 @@ public class JMSChat extends Application {
                                 System.out.println("Reception de message : " +tm.getText());
                                 msgList.add(tm.getText());
                             }
+                            else if(msg instanceof StreamMessage){
+                                var sm = (StreamMessage)msg;
+                                System.out.println("Reception de d'une image : " +sm.readString());
+                                int size = sm.readInt();
+                                var data = new byte[size];
+                                sm.readBytes(data);
+                                var bais = new ByteArrayInputStream(data);
+                                var img = new Image(bais);
+                                iv.setImage(img);
+                            }
                         }
                         catch (Exception e) {
                             e.printStackTrace();
@@ -173,6 +185,15 @@ public class JMSChat extends Application {
             }
             else{
                 try {
+                    var sMsg = session.createStreamMessage();
+                    sMsg.setStringProperty("code",fieldTo.getText());
+                    var f = new File(getClass().getResource("/images/"+fieldImage.getSelectionModel().getSelectedItem()).toURI());
+                    byte[] fis = new FileInputStream(f).readAllBytes();
+                    sMsg.writeString(fieldImage.getSelectionModel().getSelectedItem());
+                    sMsg.writeInt(fis.length);
+                    sMsg.writeBytes(fis);
+                    producer.send(sMsg);
+
                     var msg = session.createTextMessage();
                     msg.setText(fieldMessage.getText());
                     msg.setStringProperty("code",fieldTo.getText());
