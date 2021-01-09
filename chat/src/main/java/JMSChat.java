@@ -155,8 +155,8 @@ public class JMSChat extends Application {
                                 int size = sm.readInt();
                                 var data = new byte[size];
                                 sm.readBytes(data);
-                                var bais = new ByteArrayInputStream(data);
-                                var img = new Image(bais);
+                                var bis = new ByteArrayInputStream(data);
+                                var img = new Image(bis);
                                 iv.setImage(img);
                             }
                         }
